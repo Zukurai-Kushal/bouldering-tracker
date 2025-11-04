@@ -38,7 +38,7 @@ This project is a multi-user web application designed for bouldering enthusiasts
 - user_id (FK → User)
 - grade (string)
 - scale (enum: V, Font)
-- comments (optional)
+- comment (optional)
 - boulder_name (optional)
 - photo_url (optional)
 - datetime (timestamp)
@@ -51,7 +51,7 @@ This project is a multi-user web application designed for bouldering enthusiasts
 - feature_id (PK)
 - name (string)
 
-### ClimbFeature
+### ClimbFeature (Implicitly created using @ManyToMany)
 - climb_id (FK → Climb)
 - feature_id (FK → FeatureTag)
 
@@ -59,7 +59,7 @@ This project is a multi-user web application designed for bouldering enthusiasts
 - location_id (PK)
 - name (string)
 - type (enum: predefined, user-generated)
-- created_by (FK → User, nullable)
+- creator_id (FK → User, nullable)
 - country (optional)
 - region (optional)
 - gps_lat (optional)
