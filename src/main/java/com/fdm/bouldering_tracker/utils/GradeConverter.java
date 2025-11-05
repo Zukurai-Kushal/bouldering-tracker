@@ -37,10 +37,13 @@ public class GradeConverter {
     }
 
     public static String convertToFont(String vGrade) {
-        return vToFont.getOrDefault(vGrade, "Unknown");
+        if (vGrade == null) return "Unknown";
+        return vToFont.getOrDefault(vGrade.toUpperCase(), "Unknown");
     }
 
     public static String convertToV(String fontGrade) {
-        return fontToV.getOrDefault(fontGrade, "Unknown");
+        if (fontGrade == null) return "Unknown";
+        return fontToV.getOrDefault(fontGrade.toUpperCase(), "Unknown");
     }
+    
 }
