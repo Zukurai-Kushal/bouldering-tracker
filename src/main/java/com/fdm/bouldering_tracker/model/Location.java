@@ -13,7 +13,7 @@ import jakarta.persistence.ForeignKey;
 @Entity
 public class Location {
 
-	public enum Types {GYM_GENERATED, USER_GENERATED}
+	public enum Types {INDOOR, OUTDOOR}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

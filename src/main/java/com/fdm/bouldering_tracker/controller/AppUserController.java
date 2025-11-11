@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -134,5 +135,87 @@ public class AppUserController {
             .orElseThrow(() -> new InvalidUserRequestException("User not found"));
 
         climbService.deleteClimb(user, climbId);
+    }
+    
+    @PostMapping("/me/locations")
+    @Operation(summary = "Create a location for the current user")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Location created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public LocationDTO createLocation(Principal principal,
+                                      @Valid @RequestBody LocationCreationRequest request) {
+        AppUser user = appUserService.findByUsername(principal.getName())
+            .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        Location location = new Location();
+        location.setCreator(user);
+        location.setName(request.getName());
+        location.setType(request.getType());
+        location.setCountry(request.getCountry());
+        location.setRegion(request.getRegion());
+        if (request.getGpsLat() != null) location.setGpsLat(request.getGpsLat());
+        if (request.getGpsLong() != null) location.setGpsLong(request.getGpsLong());
+        location.setLocationPhotoUrl(request.getLocationPhotoUrl());
+
+        Location savedLocation = locationService.save(location);
+        return new LocationDTO(savedLocation);
+    }
+    
+    @PutMapping("/me/locations/{locationId}")
+    @Operation(summary = "Update a location for the current user")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Location updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input"),
+        @ApiResponse(responseCode = "403", description = "User not authorized to update this location"),
+        @ApiResponse(responseCode = "404", description = "Location not found")
+    })
+    public LocationDTO updateLocation(Principal principal,
+                                      @PathVariable Long locationId,
+                                      @Valid @RequestBody LocationUpdateRequest request) {
+        AppUser user = appUserService.findByUsername(principal.getName())
+            .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        Location updatedLocation = locationService.updateLocation(user, locationId, request);
+        return new LocationDTO(updatedLocation);
+    }
+    
+    @GetMapping("/me/locations")
+    @Operation(summary = "Get all locations created by the current user")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Locations retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public List<LocationDTO> getUserLocations(Principal principal) {
+        AppUser user = appUserService.findByUsername(principal.getName())
+            .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        return locationService.findByCreator(user).stream()
+            .map(LocationDTO::new)
+            .collect(Collectors.toList());
+    }
+    
+    @DeleteMapping("/me/locations/{locationId}")
+    @Operation(summary = "Delete a location created by the current user")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Location deleted successfully"),
+        @ApiResponse(responseCode = "403", description = "User not authorized to delete this location"),
+        @ApiResponse(responseCode = "404", description = "Location not found")
+    })
+    public ResponseEntity<Void> deleteLocation(Principal principal,
+                                               @PathVariable Long locationId) {
+        AppUser user = appUserService.findByUsername(principal.getName())
+            .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        Location location = locationService.findById(locationId)
+            .orElseThrow(() -> new InvalidUserRequestException("Location not found"));
+
+        if (!location.getCreator().equals(user)) {
+            throw new InvalidUserRequestException("You are not authorized to delete this location.");
+        }
+
+        locationService.deleteLocation(location);
+        return ResponseEntity.noContent().build();
     }
 }

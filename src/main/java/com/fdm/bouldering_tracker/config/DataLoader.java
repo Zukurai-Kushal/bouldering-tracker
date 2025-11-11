@@ -47,12 +47,12 @@ public class DataLoader {
 
             // Create Locations with photo URLs
             List<Location> locations = List.of(
-                new Location(users.get(1), "Sunset Forest", Location.Types.USER_GENERATED, "Hong Kong SAR", "Ngau Chi Wan", 22.77, 127.23, "https://via.placeholder.com/300x200?text=SunsetForest"),
-                new Location(users.get(0), "The Player Climbing Gym", Location.Types.GYM_GENERATED, "Hong Kong SAR", "Kowloon Bay", 22.32, 114.21, "https://via.placeholder.com/300x200?text=PlayerGym"),
-                new Location(users.get(2), "Granite Peak", Location.Types.USER_GENERATED, "USA", "California", 36.77, -119.41, "https://via.placeholder.com/300x200?text=GranitePeak"),
-                new Location(users.get(3), "Urban Climb Gym", Location.Types.GYM_GENERATED, "Australia", "Brisbane", -27.47, 153.02, "https://via.placeholder.com/300x200?text=UrbanClimb"),
-                new Location(users.get(4), "Fontainebleau", Location.Types.USER_GENERATED, "France", "Île-de-France", 48.40, 2.70, "https://via.placeholder.com/300x200?text=Fontainebleau"),
-                new Location(users.get(0), "Boulder Central", Location.Types.GYM_GENERATED, "UK", "Leicester", 52.63, -1.13, "https://via.placeholder.com/300x200?text=BoulderCentral")
+                new Location(users.get(1), "Sunset Forest", Location.Types.OUTDOOR, "Hong Kong SAR", "Ngau Chi Wan", 22.77, 127.23, "https://via.placeholder.com/300x200?text=SunsetForest"),
+                new Location(users.get(0), "The Player Climbing Gym", Location.Types.INDOOR, "Hong Kong SAR", "Kowloon Bay", 22.32, 114.21, "https://via.placeholder.com/300x200?text=PlayerGym"),
+                new Location(users.get(2), "Granite Peak", Location.Types.OUTDOOR, "USA", "California", 36.77, -119.41, "https://via.placeholder.com/300x200?text=GranitePeak"),
+                new Location(users.get(3), "Urban Climb Gym", Location.Types.INDOOR, "Australia", "Brisbane", -27.47, 153.02, "https://via.placeholder.com/300x200?text=UrbanClimb"),
+                new Location(users.get(4), "Fontainebleau", Location.Types.OUTDOOR, "France", "Île-de-France", 48.40, 2.70, "https://via.placeholder.com/300x200?text=Fontainebleau"),
+                new Location(users.get(0), "Boulder Central", Location.Types.INDOOR, "UK", "Leicester", 52.63, -1.13, "https://via.placeholder.com/300x200?text=BoulderCentral")
             );
             locationRepo.saveAll(locations);
 

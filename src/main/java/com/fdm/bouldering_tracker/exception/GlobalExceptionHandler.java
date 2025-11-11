@@ -6,8 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import com.fdm.bouldering_tracker.model.Location;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,4 +71,26 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
+    
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleEnumParseError(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        String message = "Invalid input format.";
+
+        if (ex.getCause() instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException formatException) {
+            String targetType = formatException.getTargetType().getSimpleName();
+            String invalidValue = formatException.getValue().toString();
+            message = "Invalid value '" + invalidValue + "' for type " + targetType + ". Accepted values: " +
+                      java.util.Arrays.toString(Location.Types.values());
+        }
+
+        ApiError error = new ApiError(
+            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.getReasonPhrase(),
+            message,
+            request.getRequestURI()
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
 }
