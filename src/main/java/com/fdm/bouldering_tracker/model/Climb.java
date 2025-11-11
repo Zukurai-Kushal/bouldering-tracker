@@ -19,37 +19,37 @@ public class Climb {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long climb_id;
+	private Long climbId;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "userId")
+	private AppUser user;
 	
 	@ManyToOne
-	@JoinColumn(name = "location_id")
+	@JoinColumn(name = "locationId")
 	private Location location;
 		
 	private String grade;
 	private Scales scale;
 	private ZonedDateTime datetime;
 	private int rating;
-	private boolean is_shared;
+	private boolean shared;
 	private int attempts;
 	
 	@ManyToMany
 	private List<FeatureTag> features;
 	
 	private String comment;
-	private String boulder_name;
-	private String photo_url;
+	private String boullderName;
+	private String photoURL;
 	
 	public Climb() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Climb(User user, Location location, String grade, Scales scale, ZonedDateTime datetime, int rating,
-			boolean is_shared) {
+	public Climb(AppUser user, Location location, String grade, Scales scale, ZonedDateTime datetime, int rating,
+			boolean shared) {
 		super();
 		this.user = user;
 		this.location = location;
@@ -57,23 +57,37 @@ public class Climb {
 		this.scale = scale;
 		this.datetime = datetime;
 		this.rating = rating;
-		this.is_shared = is_shared;
+		this.shared = shared;
 	}
 
-	public Long getClimb_id() {
-		return climb_id;
+	public Climb(AppUser user, Location location, String grade, Scales scale, ZonedDateTime datetime, int rating,
+			boolean shared, int attempts, List<FeatureTag> features, String comment, String boullderName,
+			String photoURL) {
+		super();
+		this.user = user;
+		this.location = location;
+		this.grade = grade;
+		this.scale = scale;
+		this.datetime = datetime;
+		this.rating = rating;
+		this.shared = shared;
+		this.attempts = attempts;
+		this.features = features;
+		this.comment = comment;
+		this.boullderName = boullderName;
+		this.photoURL = photoURL;
 	}
 
-	public User getUser() {
+	public Long getClimbId() {
+		return climbId;
+	}
+
+	public AppUser getUser() {
 		return user;
 	}
 
 	public Location getLocation() {
 		return location;
-	}
-
-	public List<FeatureTag> getFeatures() {
-		return features;
 	}
 
 	public String getGrade() {
@@ -92,24 +106,32 @@ public class Climb {
 		return rating;
 	}
 
-	public boolean isIs_shared() {
-		return is_shared;
+	public boolean isShared() {
+		return shared;
+	}
+
+	public int getAttempts() {
+		return attempts;
+	}
+
+	public List<FeatureTag> getFeatures() {
+		return features;
 	}
 
 	public String getComment() {
 		return comment;
 	}
 
-	public String getBoulder_name() {
-		return boulder_name;
+	public String getBoullderName() {
+		return boullderName;
 	}
 
-	public String getPhoto_url() {
-		return photo_url;
+	public String getPhotoURL() {
+		return photoURL;
 	}
 
-	public int getAttempts() {
-		return attempts;
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
 	public void setLocation(Location location) {
@@ -124,22 +146,6 @@ public class Climb {
 		this.scale = scale;
 	}
 
-	public void setFeatures(List<FeatureTag> features) {
-		this.features = features;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public void setBoulder_name(String boulder_name) {
-		this.boulder_name = boulder_name;
-	}
-
-	public void setPhoto_url(String photo_url) {
-		this.photo_url = photo_url;
-	}
-
 	public void setDatetime(ZonedDateTime datetime) {
 		this.datetime = datetime;
 	}
@@ -148,12 +154,28 @@ public class Climb {
 		this.rating = rating;
 	}
 
+	public void setShared(boolean shared) {
+		this.shared = shared;
+	}
+
 	public void setAttempts(int attempts) {
 		this.attempts = attempts;
 	}
 
-	public void setIs_shared(boolean is_shared) {
-		this.is_shared = is_shared;
+	public void setFeatures(List<FeatureTag> features) {
+		this.features = features;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public void setBoullderName(String boullderName) {
+		this.boullderName = boullderName;
+	}
+
+	public void setPhotoURL(String photoURL) {
+		this.photoURL = photoURL;
 	}
 	
 }

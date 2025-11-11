@@ -1,0 +1,60 @@
+package com.fdm.bouldering_tracker.exception;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.servlet.http.HttpServletRequest;
+
+@Hidden
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	@ExceptionHandler(UserAlreadyExistsException.class)
+	public ResponseEntity<ApiError> handleUserAlreadyExists(UserAlreadyExistsException ex, HttpServletRequest request) {
+	    ApiError error = new ApiError(
+	        HttpStatus.CONFLICT.value(),
+	        HttpStatus.CONFLICT.getReasonPhrase(),
+	        ex.getMessage(),
+	        request.getRequestURI()
+	    );
+	    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+	}
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+    }
+    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        String message = ex.getBindingResult().getFieldErrors().stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .collect(Collectors.joining(", "));
+
+        ApiError error = new ApiError(
+            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.getReasonPhrase(),
+            message,
+            request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
+    
+    @ExceptionHandler(InvalidUserRequestException.class)
+    public ResponseEntity<ApiError> handleInvalidUserRequest(InvalidUserRequestException ex, HttpServletRequest request) {
+        ApiError error = new ApiError(
+            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
+}

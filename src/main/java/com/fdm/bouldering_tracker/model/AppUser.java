@@ -4,31 +4,32 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-public class User {
+public class AppUser {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long user_id;
+	private Long userId;
 	private String username;
 	private String email;
-	private String password_hash;
+	private String passwordHash;
 	
-	public User() {
+	public AppUser() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(String username, String email, String password_hash) {
+	public AppUser(String username, String email, String passwordHash) {
 		super();
 		this.username = username;
 		this.email = email;
-		this.password_hash = password_hash;
+		this.passwordHash = passwordHash;
 	}
 
-	public Long getUser_id() {
-		return user_id;
+	public Long getUserId() {
+		return userId;
 	}
 
 	public String getUsername() {
@@ -39,8 +40,8 @@ public class User {
 		return email;
 	}
 
-	public String getPassword_hash() {
-		return password_hash;
+	public String getPasswordHash() {
+		return passwordHash;
 	}
 
 	public void setUsername(String username) {
@@ -51,8 +52,8 @@ public class User {
 		this.email = email;
 	}
 
-	public void setPassword_hash(String password_hash) {
-		this.password_hash = password_hash;
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
 	}
-	
+
 }

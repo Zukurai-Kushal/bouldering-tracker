@@ -16,37 +16,51 @@ public class Location {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long location_id;
+	private Long locationId;
 	
 	@ManyToOne
-	@JoinColumn(name = "creator_id")
-	private User creator;
+	@JoinColumn(name = "creatorId")
+	private AppUser creator;
 	
 	private String name;
 	private Types type;
 	
 	private String country;
 	private String region;
-	private double gps_lat;
-	private double gps_long;
+	private double gpsLat;
+	private double gpsLong;
+	private String locationPhotoUrl;
 	
 	public Location() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Location(User creator, String name, Types type) {
+	public Location(AppUser creator, String name, Types type) {
 		super();
 		this.creator = creator;
 		this.name = name;
 		this.type = type;
 	}
 
-	public Long getLocation_id() {
-		return location_id;
+	public Location(AppUser creator, String name, Types type, String country, String region, double gpsLat,
+			double gpsLong, String locationPhotoUrl) {
+		super();
+		this.creator = creator;
+		this.name = name;
+		this.type = type;
+		this.country = country;
+		this.region = region;
+		this.gpsLat = gpsLat;
+		this.gpsLong = gpsLong;
+		this.locationPhotoUrl = locationPhotoUrl;
 	}
 
-	public User getCreator() {
+	public Long getLocationId() {
+		return locationId;
+	}
+
+	public AppUser getCreator() {
 		return creator;
 	}
 
@@ -66,16 +80,28 @@ public class Location {
 		return region;
 	}
 
-	public double getGps_lat() {
-		return gps_lat;
+	public double getGpsLat() {
+		return gpsLat;
 	}
 
-	public double getGps_long() {
-		return gps_long;
+	public double getGpsLong() {
+		return gpsLong;
+	}
+
+	public String getLocationPhotoUrl() {
+		return locationPhotoUrl;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setType(Types type) {
+		this.type = type;
 	}
 
 	public void setCountry(String country) {
@@ -86,12 +112,16 @@ public class Location {
 		this.region = region;
 	}
 
-	public void setGps_lat(double gps_lat) {
-		this.gps_lat = gps_lat;
+	public void setGpsLat(double gpsLat) {
+		this.gpsLat = gpsLat;
 	}
 
-	public void setGps_long(double gps_long) {
-		this.gps_long = gps_long;
+	public void setGpsLong(double gpsLong) {
+		this.gpsLong = gpsLong;
 	}
-	
+
+	public void setLocationPhotoUrl(String locationPhotoUrl) {
+		this.locationPhotoUrl = locationPhotoUrl;
+	}
+
 }

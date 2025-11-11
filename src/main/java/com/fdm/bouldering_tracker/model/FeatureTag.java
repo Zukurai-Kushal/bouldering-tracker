@@ -13,7 +13,7 @@ public class FeatureTag {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long feature_id;
+	private Long featureId;
 	
 	private String name;
 	
@@ -25,13 +25,14 @@ public class FeatureTag {
 		this.name = name;
 	}
 
-	public FeatureTag() {
+	public FeatureTag(String name, List<Climb> climbs) {
 		super();
-		// TODO Auto-generated constructor stub
+		this.name = name;
+		this.climbs = climbs;
 	}
 
-	public Long getFeature_id() {
-		return feature_id;
+	public Long getFeatureId() {
+		return featureId;
 	}
 
 	public String getName() {
@@ -49,5 +50,5 @@ public class FeatureTag {
 	public void setClimbs(List<Climb> climbs) {
 		this.climbs = climbs;
 	}
-	
+
 }

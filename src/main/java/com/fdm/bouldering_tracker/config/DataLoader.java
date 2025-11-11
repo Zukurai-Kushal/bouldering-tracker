@@ -10,99 +10,91 @@ import java.util.stream.Stream;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fdm.bouldering_tracker.model.Climb;
 import com.fdm.bouldering_tracker.model.FeatureTag;
 import com.fdm.bouldering_tracker.model.Location;
-import com.fdm.bouldering_tracker.model.User;
+import com.fdm.bouldering_tracker.model.Location.Types;
+import com.fdm.bouldering_tracker.model.AppUser;
 import com.fdm.bouldering_tracker.repository.ClimbRepository;
 import com.fdm.bouldering_tracker.repository.FeatureTagRepository;
 import com.fdm.bouldering_tracker.repository.LocationRepository;
-import com.fdm.bouldering_tracker.repository.UserRepository;
+import com.fdm.bouldering_tracker.repository.AppUserRepository;
 
 @Configuration
+@Profile("dev")
 public class DataLoader {
 
-	@Bean
-	public CommandLineRunner dummyDataLoader(UserRepository userRepository, LocationRepository locationRepository, ClimbRepository climbRepository, FeatureTagRepository featureTagRepository) {
-		return (args) -> {
-			
-			// Create Users
-			User user1 = new User("Alex", "alex@gmail.com", "2bb12bb768eb669f0e4b9df29e22a00467eb513c275ccfff1013288facac7889");
-			User user2 = new User("Jamie", "jamie@example.com", "a1f5c3d2e8b9f0a4c7d6e2b3a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0");
-			User user3 = new User("Riley", "riley@example.com", "f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0");
-			User user4 = new User("Casey", "casey@example.com", "b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1");
-			User user5 = new User("Drew", "drew@example.com", "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3");
+    @Bean
+    public CommandLineRunner dummyDataLoader(AppUserRepository userRepo,
+                                             LocationRepository locationRepo,
+                                             ClimbRepository climbRepo,
+                                             FeatureTagRepository tagRepo,
+                                             PasswordEncoder passwordEncoder) {
+        return args -> {
 
-			userRepository.save(user1);
-			userRepository.save(user2);
-			userRepository.save(user3);
-			userRepository.save(user4);
-			userRepository.save(user5);
+            // Create Users
+            List<AppUser> users = List.of(
+                new AppUser("Alex", "alex@gmail.com", passwordEncoder.encode("pass123")),
+                new AppUser("Jamie", "jamie@example.com", "hash_jamie"),
+                new AppUser("Riley", "riley@example.com", "hash_riley"),
+                new AppUser("Casey", "casey@example.com", "hash_casey"),
+                new AppUser("Drew", "drew@example.com", "hash_drew")
+            );
+            userRepo.saveAll(users);
 
-			// Create Locations
-			Location location1 = new Location(user2, "Sunset Forest", Location.Types.USER_GENERATED);
-			location1.setCountry("Hong Kong SAR");
-			location1.setRegion("Ngau Chi Wan");
-			location1.setGps_lat(22.77);
-			location1.setGps_long(127.23);
+            // Create Locations with photo URLs
+            List<Location> locations = List.of(
+                new Location(users.get(1), "Sunset Forest", Location.Types.USER_GENERATED, "Hong Kong SAR", "Ngau Chi Wan", 22.77, 127.23, "https://via.placeholder.com/300x200?text=SunsetForest"),
+                new Location(users.get(0), "The Player Climbing Gym", Location.Types.GYM_GENERATED, "Hong Kong SAR", "Kowloon Bay", 22.32, 114.21, "https://via.placeholder.com/300x200?text=PlayerGym"),
+                new Location(users.get(2), "Granite Peak", Location.Types.USER_GENERATED, "USA", "California", 36.77, -119.41, "https://via.placeholder.com/300x200?text=GranitePeak"),
+                new Location(users.get(3), "Urban Climb Gym", Location.Types.GYM_GENERATED, "Australia", "Brisbane", -27.47, 153.02, "https://via.placeholder.com/300x200?text=UrbanClimb"),
+                new Location(users.get(4), "Fontainebleau", Location.Types.USER_GENERATED, "France", "Île-de-France", 48.40, 2.70, "https://via.placeholder.com/300x200?text=Fontainebleau"),
+                new Location(users.get(0), "Boulder Central", Location.Types.GYM_GENERATED, "UK", "Leicester", 52.63, -1.13, "https://via.placeholder.com/300x200?text=BoulderCentral")
+            );
+            locationRepo.saveAll(locations);
 
-			Location location2 = new Location(user1, "The Player Climbing Gym", Location.Types.GYM_GENERATED);
+            // Create Feature Tags
+            List<FeatureTag> features = List.of(
+                new FeatureTag("crimpy"),
+                new FeatureTag("dynamic"),
+                new FeatureTag("static"),
+                new FeatureTag("overhang"),
+                new FeatureTag("compression"),
+                new FeatureTag("mantle"),
+                new FeatureTag("sloper"),
+                new FeatureTag("technical"),
+                new FeatureTag("powerful"),
+                new FeatureTag("balance")
+            );
+            tagRepo.saveAll(features);
 
-			Location location3 = new Location(user3, "Granite Peak", Location.Types.USER_GENERATED);
-			location3.setCountry("USA");
-			location3.setRegion("California");
-			location3.setGps_lat(36.77);
-			location3.setGps_long(-119.41);
+            // Create Climbs using full constructor
+            List<Climb> climbs = List.of(
+                new Climb(users.get(0), locations.get(0), "V3", Climb.Scales.V_SCALE, ZonedDateTime.now(), 3, true, 6,
+                    features.subList(0, 3), "Tough start, sketchy ending", "Valhalla High Start", "https://via.placeholder.com/300x200?text=Valhalla"),
 
-			Location location4 = new Location(user4, "Urban Climb Gym", Location.Types.GYM_GENERATED);
-			location4.setCountry("Australia");
-			location4.setRegion("Brisbane");
-			location4.setGps_lat(-27.47);
-			location4.setGps_long(153.02);
+                new Climb(users.get(1), locations.get(1), "V5", Climb.Scales.V_SCALE, ZonedDateTime.now().minusDays(2), 2, false, 4,
+                    features.subList(3, 6), "Powerful moves, couldn't stick the top.", "The Juggernaut", "https://via.placeholder.com/300x200?text=Juggernaut"),
 
-			locationRepository.save(location1);
-			locationRepository.save(location2);
-			locationRepository.save(location3);
-			locationRepository.save(location4);
+                new Climb(users.get(2), locations.get(2), "V2", Climb.Scales.V_SCALE, ZonedDateTime.now().minusDays(5), 1, true, 2,
+                    Stream.concat(features.stream().limit(2), features.stream().skip(6).limit(2)).collect(Collectors.toList()),
+                    "Nice flow, good holds.", "Granite Groove", "https://via.placeholder.com/300x200?text=GraniteGroove"),
 
-			// Create Feature Tags
-			List<FeatureTag> features = new ArrayList<>();
-			features.add(new FeatureTag("crimpy"));
-			features.add(new FeatureTag("dynamic"));
-			features.add(new FeatureTag("static"));
-			featureTagRepository.saveAll(features);
+                new Climb(users.get(3), locations.get(3), "V6", Climb.Scales.V_SCALE, ZonedDateTime.now().minusDays(1), 4, true, 5,
+                    features.subList(4, 8), "Compression and slopers, very physical.", "Brisbane Beast", "https://via.placeholder.com/300x200?text=BrisbaneBeast"),
 
-			List<FeatureTag> moreFeatures = new ArrayList<>();
-			moreFeatures.add(new FeatureTag("overhang"));
-			moreFeatures.add(new FeatureTag("compression"));
-			moreFeatures.add(new FeatureTag("mantle"));
-			moreFeatures.add(new FeatureTag("sloper"));
-			featureTagRepository.saveAll(moreFeatures);
+                new Climb(users.get(4), locations.get(4), "6A", Climb.Scales.FONT_SCALE, ZonedDateTime.now().minusDays(3), 5, true, 3,
+                    features.subList(7, 10), "Font-style technical climb with balance.", "Bleau Classic", "https://via.placeholder.com/300x200?text=BleauClassic"),
 
-			// Create Climbs
-			Climb climb1 = new Climb(user1, location1, "V3", Climb.Scales.V_SCALE, ZonedDateTime.now(), 3, true);
-			climb1.setBoulder_name("Valhalla High Start");
-			climb1.setAttempts(6);
-			climb1.setComment("Though start, sketchy ending");
-			climb1.setFeatures(features);
-			climbRepository.save(climb1);
+                new Climb(users.get(0), locations.get(5), "V4", Climb.Scales.V_SCALE, ZonedDateTime.now().minusDays(7), 3, false, 7,
+                    Stream.of(features.get(1), features.get(5)).collect(Collectors.toList()),
+                    "Gym route with dynamic start and mantle finish.", "Central Circuit", "https://via.placeholder.com/300x200?text=CentralCircuit")
+            );
 
-			Climb climb2 = new Climb(user2, location2, "V5", Climb.Scales.V_SCALE, ZonedDateTime.now().minusDays(2), 2, false);
-			climb2.setBoulder_name("The Juggernaut");
-			climb2.setAttempts(4);
-			climb2.setComment("Powerful moves, couldn't stick the top.");
-			climb2.setFeatures(moreFeatures);
-			climbRepository.save(climb2);
-
-			Climb climb3 = new Climb(user3, location3, "V2", Climb.Scales.V_SCALE, ZonedDateTime.now().minusDays(5), 1, true);
-			climb3.setBoulder_name("Granite Groove");
-			climb3.setAttempts(2);
-			climb3.setComment("Nice flow, good holds.");
-			climb3.setFeatures(Stream.concat(features.stream().limit(2),moreFeatures.stream().limit(2)).collect(Collectors.toList())); // reuse earlier features
-			climbRepository.save(climb3);
-			
-	      };
-	}
-	
+            climbRepo.saveAll(climbs);
+        };
+    }
 }
