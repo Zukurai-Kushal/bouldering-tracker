@@ -19,6 +19,11 @@ public class FeatureTag {
 	
 	@ManyToMany(mappedBy = "features")
 	private List<Climb> climbs;
+	
+	public FeatureTag() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public FeatureTag(String name) {
 		super();

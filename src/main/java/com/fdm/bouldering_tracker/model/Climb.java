@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ForeignKey;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +23,19 @@ public class Climb {
 	private Long climbId;
 	
 	@ManyToOne
-	@JoinColumn(name = "userId")
+	@JoinColumn(
+	    name = "userId",
+	    nullable = true,
+	    foreignKey = @ForeignKey(name = "FK_climb_user")
+	)
 	private AppUser user;
 	
 	@ManyToOne
-	@JoinColumn(name = "locationId")
+	@JoinColumn(
+	    name = "locationId",
+	    nullable = true,
+	    foreignKey = @ForeignKey(name = "FK_climb_location")
+	)
 	private Location location;
 		
 	private String grade;
@@ -40,7 +49,7 @@ public class Climb {
 	private List<FeatureTag> features;
 	
 	private String comment;
-	private String boullderName;
+	private String boulderName;
 	private String photoURL;
 	
 	public Climb() {
@@ -74,7 +83,7 @@ public class Climb {
 		this.attempts = attempts;
 		this.features = features;
 		this.comment = comment;
-		this.boullderName = boullderName;
+		this.boulderName = boullderName;
 		this.photoURL = photoURL;
 	}
 
@@ -122,8 +131,8 @@ public class Climb {
 		return comment;
 	}
 
-	public String getBoullderName() {
-		return boullderName;
+	public String getBoulderName() {
+		return boulderName;
 	}
 
 	public String getPhotoURL() {
@@ -170,8 +179,8 @@ public class Climb {
 		this.comment = comment;
 	}
 
-	public void setBoullderName(String boullderName) {
-		this.boullderName = boullderName;
+	public void setBoulderName(String boulderName) {
+		this.boulderName = boulderName;
 	}
 
 	public void setPhotoURL(String photoURL) {

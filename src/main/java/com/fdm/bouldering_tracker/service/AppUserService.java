@@ -7,22 +7,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fdm.bouldering_tracker.dto.UpdateAppUserDTO;
+import com.fdm.bouldering_tracker.dto.AppUserUpdateRequest;
 import com.fdm.bouldering_tracker.exception.InvalidUserRequestException;
 import com.fdm.bouldering_tracker.exception.UserAlreadyExistsException;
 import com.fdm.bouldering_tracker.model.AppUser;
+import com.fdm.bouldering_tracker.model.Climb;
+import com.fdm.bouldering_tracker.model.Location;
 import com.fdm.bouldering_tracker.repository.AppUserRepository;
+import com.fdm.bouldering_tracker.repository.ClimbRepository;
+import com.fdm.bouldering_tracker.repository.LocationRepository;
 
 @Service
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LocationRepository locationRepository;
+    private final ClimbRepository climbRepository;
 
     @Autowired
-    public AppUserService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+    public AppUserService(
+    		AppUserRepository appUserRepository, 
+    		PasswordEncoder passwordEncoder,
+    		LocationRepository locationRepository,
+    		ClimbRepository climbRepository) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.locationRepository = locationRepository;
+        this.climbRepository = climbRepository;
     }
 
     public Optional<AppUser> findByUserId(Long userId) {
@@ -59,7 +71,7 @@ public class AppUserService {
     	return appUserRepository.save(user);
     }
     
-    public AppUser updateUser(AppUser user, UpdateAppUserDTO updateDTO) {
+    public AppUser updateUser(AppUser user, AppUserUpdateRequest updateDTO) {
         if (updateDTO.getUsername() != null &&
             !user.getUsername().equals(updateDTO.getUsername()) &&
             usernameExists(updateDTO.getUsername())) {
@@ -72,11 +84,9 @@ public class AppUserService {
             throw new UserAlreadyExistsException("Email already taken.");
         }
         
-
 		if (updateDTO.getEmail() != null && updateDTO.getEmail().isBlank()) {
 		    throw new InvalidUserRequestException("Email cannot be blank.");
 		}
-
 
         if (updateDTO.getUsername() != null) {
             user.setUsername(updateDTO.getUsername());
@@ -93,8 +103,23 @@ public class AppUserService {
         return appUserRepository.save(user);
     }
     
-    public void delete(AppUser user) {
-    	appUserRepository.delete(user);
+    public void deleteUser(AppUser user) {
+        // Nullify references in Location
+        List<Location> locations = locationRepository.findByCreator(user);
+        for (Location loc : locations) {
+            loc.setCreator(null);
+        }
+        locationRepository.saveAll(locations);
+
+        // Nullify references in Climb
+        List<Climb> climbs = climbRepository.findByUser(user);
+        for (Climb climb : climbs) {
+            climb.setUser(null);
+        }
+        climbRepository.saveAll(climbs);
+
+        // Now delete the user
+        appUserRepository.delete(user);
     }
     
     public List<AppUser> findAllUsers(){

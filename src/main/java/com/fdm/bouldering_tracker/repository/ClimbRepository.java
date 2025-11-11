@@ -1,7 +1,6 @@
 package com.fdm.bouldering_tracker.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,5 +15,6 @@ public interface ClimbRepository extends JpaRepository<Climb, Long>{
     List<Climb> findByLocation(Location location);
     List<Climb> findByFeaturesContaining(FeatureTag feature);
     List<Climb> findByFeaturesIn(List<FeatureTag> features);
+    List<Climb> findBySharedTrue();
 	
 }

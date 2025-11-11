@@ -57,4 +57,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.badRequest().body(error);
     }
+    
+    @ExceptionHandler(UnauthorizedClimbAccessException.class)
+    public ResponseEntity<ApiError> handleUnauthorizedClimbAccess(UnauthorizedClimbAccessException ex, HttpServletRequest request) {
+        ApiError error = new ApiError(
+            HttpStatus.FORBIDDEN.value(),
+            HttpStatus.FORBIDDEN.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
 }

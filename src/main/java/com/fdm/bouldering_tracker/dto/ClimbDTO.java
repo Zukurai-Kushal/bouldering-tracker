@@ -2,6 +2,7 @@ package com.fdm.bouldering_tracker.dto;
 
 import com.fdm.bouldering_tracker.model.Climb;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 public class ClimbDTO {
     private Long climbId;
@@ -12,19 +13,19 @@ public class ClimbDTO {
     private boolean shared;
     private int attempts;
     private String comment;
-    private String boullderName;
+    private String boulderName;
     private String photoURL;
 
     public ClimbDTO(Climb climb) {
         this.climbId = climb.getClimbId();
         this.grade = climb.getGrade();
-        this.scale = climb.getScale().name();
+        this.scale = Optional.ofNullable(climb.getScale()).map(Enum::name).orElse(null);
         this.datetime = climb.getDatetime();
         this.rating = climb.getRating();
         this.shared = climb.isShared();
         this.attempts = climb.getAttempts();
         this.comment = climb.getComment();
-        this.boullderName = climb.getBoullderName();
+        this.boulderName = climb.getBoulderName();
         this.photoURL = climb.getPhotoURL();
     }
 
@@ -92,12 +93,12 @@ public class ClimbDTO {
 		this.comment = comment;
 	}
 
-	public String getBoullderName() {
-		return boullderName;
+	public String getBoulderName() {
+		return boulderName;
 	}
 
-	public void setBoullderName(String boullderName) {
-		this.boullderName = boullderName;
+	public void setBoulderName(String boulderName) {
+		this.boulderName = boulderName;
 	}
 
 	public String getPhotoURL() {
@@ -108,6 +109,4 @@ public class ClimbDTO {
 		this.photoURL = photoURL;
 	}
 
-    
-    // Getters omitted for brevity
 }

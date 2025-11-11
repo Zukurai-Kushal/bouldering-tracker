@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ForeignKey;
 
 @Entity
 public class Location {
@@ -19,7 +20,11 @@ public class Location {
 	private Long locationId;
 	
 	@ManyToOne
-	@JoinColumn(name = "creatorId")
+	@JoinColumn(
+	    name = "creatorId",
+	    nullable = true,
+	    foreignKey = @ForeignKey(name = "FK_location_creator")
+	)
 	private AppUser creator;
 	
 	private String name;
