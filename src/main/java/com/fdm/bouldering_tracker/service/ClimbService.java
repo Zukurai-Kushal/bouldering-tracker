@@ -157,4 +157,26 @@ public class ClimbService {
 
 	    climbRepository.delete(climb);
 	}
+	
+	public List<Climb> findByUserSorted(AppUser user) {
+	    return climbRepository.findByUserOrderByDatetimeDesc(user);
+	}
+
+	public List<Climb> findSharedClimbsSorted() {
+	    return climbRepository.findBySharedTrueOrderByDatetimeDesc();
+	}
+	
+	public List<Climb> findSharedClimbsFiltered(Long locationId, String country, String region,
+			Double latStart, Double latEnd, Double longStart, Double longEnd) {
+		if (locationId != null) {
+			return climbRepository.findByLocationLocationIdAndSharedTrueOrderByDatetimeDesc(locationId);
+		}
+		return climbRepository.findSharedClimbsFiltered(country, region, latStart, latEnd, longStart, longEnd);
+	}
+	
+	public List<Climb> findUserClimbsFiltered(AppUser user, Long locationId, String country, String region,
+			Double latStart, Double latEnd, Double longStart, Double longEnd) {
+		return climbRepository.findUserClimbsFiltered(user, locationId, country, region, latStart, latEnd, longStart, longEnd);
+	}
+		
 }

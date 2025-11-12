@@ -1,7 +1,11 @@
 package com.fdm.bouldering_tracker.dto;
 
 import com.fdm.bouldering_tracker.model.Climb;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class ClimbDTO {
@@ -15,6 +19,12 @@ public class ClimbDTO {
     private String comment;
     private String boulderName;
     private String photoURL;
+    
+    @Schema(description = "Location details for the climb")
+    private LocationDTO location;
+
+    @Schema(description = "Feature tags associated with the climb")
+    private List<FeatureTagDTO> features;
 
     public ClimbDTO(Climb climb) {
         this.climbId = climb.getClimbId();
@@ -27,6 +37,10 @@ public class ClimbDTO {
         this.comment = climb.getComment();
         this.boulderName = climb.getBoulderName();
         this.photoURL = climb.getPhotoURL();
+        this.location = climb.getLocation() != null ? new LocationDTO(climb.getLocation()) : null;
+        this.features = climb.getFeatures() != null
+            ? climb.getFeatures().stream().map(FeatureTagDTO::new).toList()
+            : List.of();
     }
 
 	public Long getClimbId() {
@@ -107,6 +121,22 @@ public class ClimbDTO {
 
 	public void setPhotoURL(String photoURL) {
 		this.photoURL = photoURL;
+	}
+
+	public LocationDTO getLocation() {
+		return location;
+	}
+
+	public void setLocation(LocationDTO location) {
+		this.location = location;
+	}
+
+	public List<FeatureTagDTO> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(List<FeatureTagDTO> features) {
+		this.features = features;
 	}
 
 }

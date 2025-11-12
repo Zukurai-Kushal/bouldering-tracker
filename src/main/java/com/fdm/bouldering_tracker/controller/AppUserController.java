@@ -65,15 +65,16 @@ public class AppUserController {
                 .orElseThrow(() -> new InvalidUserRequestException("User not found"));
         appUserService.deleteUser(user);
     }
-
+    
     @GetMapping("/me/climbs")
-    @Operation(summary = "Get climbs for current user")
+    @Operation(summary = "Get climbs for current user, sorted by newest first")
     public List<ClimbDTO> getUserClimbs(Principal principal) {
         AppUser user = appUserService.findByUsername(principal.getName())
-                .orElseThrow(() -> new InvalidUserRequestException("User not found"));
-        return climbService.findByUser(user).stream()
-                .map(ClimbDTO::new)
-                .collect(Collectors.toList());
+            .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        return climbService.findByUserSorted(user).stream()
+            .map(ClimbDTO::new)
+            .collect(Collectors.toList());
     }
 
     @PostMapping("/register")
@@ -217,5 +218,52 @@ public class AppUserController {
 
         locationService.deleteLocation(location);
         return ResponseEntity.noContent().build();
+    }
+    
+    @PostMapping("/me/feature-tags")
+    @Operation(summary = "Create a feature tag for the current user")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Feature tag created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input or duplicate name"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public FeatureTagDTO createFeatureTag(Principal principal,
+                                          @Valid @RequestBody FeatureTagCreationRequest request) {
+        AppUser user = appUserService.findByUsername(principal.getName())
+            .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        featureTagService.findByName(request.getName()).ifPresent(tag -> {
+            throw new InvalidUserRequestException("Feature tag with this name already exists");
+        });
+
+        FeatureTag tag = new FeatureTag(request.getName());
+        FeatureTag savedTag = featureTagService.save(tag);
+
+        return new FeatureTagDTO(savedTag);
+    }
+    
+    @GetMapping("/me/climbs/search")
+    @Operation(summary = "Search all climbs of the current user by location, country, region, or GPS range")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Filtered climbs retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public List<ClimbDTO> searchUserClimbs(
+            Principal principal,
+            @RequestParam(required = false) Long locationId,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false) Double latStart,
+            @RequestParam(required = false) Double latEnd,
+            @RequestParam(required = false) Double longStart,
+            @RequestParam(required = false) Double longEnd) {
+
+        AppUser user = appUserService.findByUsername(principal.getName())
+                .orElseThrow(() -> new InvalidUserRequestException("User not found"));
+
+        return climbService.findUserClimbsFiltered(user, locationId, country, region, latStart, latEnd, longStart, longEnd)
+                .stream()
+                .map(ClimbDTO::new)
+                .collect(Collectors.toList());
     }
 }

@@ -90,4 +90,8 @@ public class LocationService {
 
         return locationRepository.save(location);
     }
+    
+    public List<Location> searchByName(String namePart) {
+        return locationRepository.findAllByNameContainingIgnoreCase(namePart);
+    }
 }

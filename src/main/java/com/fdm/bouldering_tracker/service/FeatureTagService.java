@@ -3,6 +3,7 @@ package com.fdm.bouldering_tracker.service;
 import com.fdm.bouldering_tracker.model.FeatureTag;
 import com.fdm.bouldering_tracker.repository.FeatureTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,4 +38,13 @@ public class FeatureTagService {
     public void delete(FeatureTag tag) {
         featureTagRepository.delete(tag);
     }
+    
+    public List<FeatureTag> findAll() {
+    	return featureTagRepository.findAll();
+    }
+    
+	public List<FeatureTag> findAllSorted() {
+	    return featureTagRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+	}
+    
 }
