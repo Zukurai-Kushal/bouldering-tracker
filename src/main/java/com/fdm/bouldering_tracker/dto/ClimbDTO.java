@@ -25,6 +25,9 @@ public class ClimbDTO {
 
     @Schema(description = "Feature tags associated with the climb")
     private List<FeatureTagDTO> features;
+    
+    @Schema(description = "Username of the user who created the climb", example = "climber123")
+    private String username;
 
     public ClimbDTO(Climb climb) {
         this.climbId = climb.getClimbId();
@@ -41,6 +44,7 @@ public class ClimbDTO {
         this.features = climb.getFeatures() != null
             ? climb.getFeatures().stream().map(FeatureTagDTO::new).toList()
             : List.of();
+        this.username = climb.getUser() != null ? climb.getUser().getUsername() : null;
     }
 
 	public Long getClimbId() {
@@ -137,6 +141,14 @@ public class ClimbDTO {
 
 	public void setFeatures(List<FeatureTagDTO> features) {
 		this.features = features;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }
