@@ -67,3 +67,6 @@ This project is a multi-user web application designed for bouldering enthusiasts
 
 ## ERD Diagram
 ![alt text](media/Bouldering_App_ERD.png)
+
+## Postman Collection Runner
+https://kushal-zuk-9525202.postman.co/workspace/My-Workspace~e3933dfd-ea62-4e38-9df5-57cd0ffaa852/collection/49807865-9e0ffec3-c703-4b9f-b07d-03d325cfaae6?action=share&creator=49807865
