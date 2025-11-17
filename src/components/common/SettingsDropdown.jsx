@@ -12,28 +12,28 @@ export default function SettingsDropdown() {
   const handleLogout = async () => {
     await logout();
     setUser(null);
-    navigate('/private'); // Redirect to login page
+    navigate('/private');
   };
 
   return (
-    <div className="absolute right-0 mt-2 bg-white dark:bg-gray-700 shadow rounded-md p-2 w-40">
+    <div className="absolute top-20 right-0 mt-2 w-40 bg-gray-800 p-2 space-y-2 rounded-md shadow-lg">
       <button
         onClick={() => setDarkMode(!darkMode)}
-        className="block w-full text-left px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-600"
+        className="block w-full text-left px-2 py-1 text-white hover:bg-blue-600"
       >
         {darkMode ? 'Light Mode' : 'Dark Mode'}
       </button>
       {!user ? (
         <button
           onClick={() => navigate('/private')}
-          className="block w-full text-left px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-600"
+          className="block w-full text-left px-2 py-1 text-white hover:bg-blue-600"
         >
           Login
         </button>
       ) : (
         <button
           onClick={handleLogout}
-          className="block w-full text-left px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500"
+          className="block w-full text-left px-2 py-1 text-white hover:bg-blue-600"
         >
           Logout
         </button>

@@ -8,7 +8,7 @@ export default function ClimbCard({ climb , isPrivate , onEdit, onDeleteSuccess}
   return (
     <>
       <div
-        className="flex bg-white dark:bg-gray-800 rounded-lg shadow p-2 cursor-pointer w-full max-w-5xl"
+        className="flex bg-white dark:bg-gray-800 rounded-lg shadow p-2 cursor-pointer w-full max-w-5xl border border-transparent hover:border-blue-500"
         onClick={() => setShowModal(true)}
       >
         {/* LHS Thumbnail */}
@@ -32,11 +32,11 @@ export default function ClimbCard({ climb , isPrivate , onEdit, onDeleteSuccess}
           </div>
           {/* Row 2 */}
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            {climb.username} • {climb.location?.name || 'No location'}
+            {climb.username} @{climb.location?.name || 'No location'}
           </div>
           {/* Row 3 */}
           <div className="text-xs mt-1">
-            Attempts: {climb.attempts} •
+            Attempts: {climb.attempts}
             {climb.features.map(f => (
               <span key={f.name} className="bg-blue-100 dark:bg-blue-700 px-2 py-0.5 rounded-full ml-1">
                 {f.name}

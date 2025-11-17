@@ -4,16 +4,23 @@ export default function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const getButtonClasses = (path) =>
+    `flex-1 py-2 ${
+      location.pathname === path
+        ? 'bg-blue-600 text-green-400 font-bold'
+        : 'bg-gray-800 text-white'
+    } hover:bg-blue-500 transition`;
+
   return (
-    <nav className="fixed bottom-0 w-full flex justify-around bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 p-2">
+    <nav className="fixed bottom-0 w-full flex justify-around bg-gray-800 p-2 space-x-2">
       <button
-        className={`flex-1 py-2 ${location.pathname === '/public' ? 'font-bold' : ''}`}
+        className={getButtonClasses('/public')}
         onClick={() => navigate('/public')}
       >
         Public
       </button>
       <button
-        className={`flex-1 py-2 ${location.pathname === '/private' ? 'font-bold' : ''}`}
+        className={getButtonClasses('/private')}
         onClick={() => navigate('/private')}
       >
         Private

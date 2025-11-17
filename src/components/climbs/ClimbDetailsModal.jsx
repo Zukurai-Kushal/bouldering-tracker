@@ -27,17 +27,19 @@ export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, o
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-4 w-11/12 max-w-lg relative">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-        >
-          ✕
-        </button>
-        
-        {/* Success/Error Messages */}
-        {errorMsg && <p className="text-red-500 mb-2">{errorMsg}</p>}
-        {successMsg && <p className="text-green-500 mb-2">{successMsg}</p>}
+        {/* Top Bar: Message Centered, Close Button Right */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex-1 text-center">
+            {errorMsg && <p className="text-red-500 font-semibold">{errorMsg}</p>}
+            {successMsg && <p className="text-green-500 font-semibold">{successMsg}</p>}
+          </div>
+          <button
+            onClick={onClose}
+            className="right-0 top-0 text-gray-600 hover:text-red-500 text-2xl font-bold"
+          >
+            ✕
+          </button>
+        </div>
 
         {/* Row 1: Grade, Boulder Name, Rating */}
         <div className="flex justify-between items-center mb-3">
