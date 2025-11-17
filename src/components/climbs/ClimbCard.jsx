@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ClimbDetailsModal from './ClimbDetailsModal';
 import { StarIcon } from '@heroicons/react/24/solid';
 
-export default function ClimbCard({ climb , isPrivate , onEdit}) {
+export default function ClimbCard({ climb , isPrivate , onEdit, onDeleteSuccess}) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -52,6 +52,10 @@ export default function ClimbCard({ climb , isPrivate , onEdit}) {
             onClose={() => setShowModal(false)}
             isPrivate={isPrivate}
             onEdit={() => onEdit(climb)}
+            onDeleteSuccess={() => {
+              setShowModal(false);
+              onDeleteSuccess();
+            }}
           />
         )}
     </>

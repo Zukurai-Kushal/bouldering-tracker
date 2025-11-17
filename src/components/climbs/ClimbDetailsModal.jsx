@@ -1,8 +1,28 @@
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
+import { deleteClimb } from '../../api/userApi';
 
-export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, onEdit }) {
-  const [showLocationPopup, setShowLocationPopup] = useState(false);
+export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, onEdit, onDeleteSuccess }) {
+  const [showLocationPopup, setShowLocationPopup] = useState(false);  
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this climb?')) return;
+    setLoading(true);
+    setErrorMsg('');
+    try {
+      await deleteClimb(climb.climbId);
+      alert('Climb deleted successfully!');
+      onClose();
+      onDeleteSuccess();
+    } catch {
+      setErrorMsg('Failed to delete climb. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -14,6 +34,10 @@ export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, o
         >
           ✕
         </button>
+        
+        {/* Success/Error Messages */}
+        {errorMsg && <p className="text-red-500 mb-2">{errorMsg}</p>}
+        {successMsg && <p className="text-green-500 mb-2">{successMsg}</p>}
 
         {/* Row 1: Grade, Boulder Name, Rating */}
         <div className="flex justify-between items-center mb-3">
@@ -50,10 +74,10 @@ export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, o
 
         {/* Location Popup */}
         {showLocationPopup && climb.location && (
-          <div className="absolute top-20 right-4 bg-white dark:bg-gray-700 shadow-lg rounded-md p-3 w-64 z-50">
+          <div className="absolute top-30 right-30 bg-white dark:bg-gray-700 shadow-lg rounded-md p-3 w-64 z-50">
             <div className="flex">
               {/* LHS: Photo */}
-              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-600 rounded-md overflow-hidden">
+              <div className="w-30 h-30 bg-gray-200 dark:bg-gray-600 rounded-md overflow-hidden">
                 {climb.location.locationPhotoUrl && (
                   <img
                     src={climb.location.locationPhotoUrl}
@@ -63,7 +87,7 @@ export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, o
                 )}
               </div>
               {/* RHS: Details */}
-              <div className="ml-2 text-xs">
+              <div className="ml-2 text-sm">
                 <div className="font-bold">{climb.location.name}</div>
                 <div>{climb.location.type}</div>
                 <div>{climb.location.country}, {climb.location.region}</div>
@@ -96,16 +120,27 @@ export default function ClimbDetailsModal({ climb, onClose, isPrivate = false, o
             </span>
           ))}
         </div>
-
-        {/* Edit button for climb owner */}
+        
+        {/* Action Buttons */}
         {isPrivate && (
-          <button
-            onClick={onEdit}
-            className="mt-4 bg-green-500 text-white px-3 py-2 rounded-md"
-          >
-            Edit Climb
-          </button>
+          <div className="flex justify-between gap-2">
+            <button
+              onClick={() => onEdit(climb)}
+              disabled={loading}
+              className="bg-blue-500 text-white px-4 py-2 rounded w-1/2"
+            >
+              Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={loading}
+              className="bg-red-500 text-white px-4 py-2 rounded w-1/2"
+            >
+              {loading ? 'Deleting...' : 'Delete Climb'}
+            </button>
+          </div>
         )}
+
       </div>
     </div>
   );

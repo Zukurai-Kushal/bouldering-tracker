@@ -24,3 +24,7 @@ export const createClimb = (data) => api.post('/users/me/climbs', data);
 export const updateClimb = (climbId, data) => api.put(`/users/me/climbs/${climbId}`, data);
 
 export const createFeatureTag = (data) => api.post('/users/me/feature-tags', data);
+
+export const register = (username, email, password) => api.post('/users/register', {username, email, password}); 
+
+export const deleteClimb = (climbId) => api.delete(`/users/me/climbs/${climbId}`);

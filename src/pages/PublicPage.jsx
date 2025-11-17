@@ -8,6 +8,7 @@ import { FunnelIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 export default function PublicPage() {
   const [climbs, setClimbs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [filters, setFilters] = useState({});
@@ -29,12 +30,13 @@ export default function PublicPage() {
           if (filters.latEnd) params.latEnd = filters.latEnd;
           if (filters.longStart) params.longStart = filters.longStart;
           if (filters.longEnd) params.longEnd = filters.longEnd;
-
+          
           const res = await searchSharedClimbs(params);
           setClimbs(res.data);
         }
       } catch (error) {
-        console.error('Error fetching climbs:', error);
+        setError('Failed to load shared climbs. Please try again.');
+        setClimbs([]);
       } finally {
         setLoading(false);
       }
@@ -98,7 +100,7 @@ export default function PublicPage() {
       ) : (
         <div className="flex flex-col items-center gap-4 w-full px-4">
           {climbs.map(climb => (
-            <ClimbCard key={climb.id} climb={climb} isPrivate={false} />
+            <ClimbCard key={climb.climbId} climb={climb} isPrivate={false} />
           ))}
         </div>
       )}

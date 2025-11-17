@@ -81,7 +81,7 @@ export default function ClimbForm({ mode = 'create', initialData = {}, climbId, 
       }
       setTimeout(() => {
         onSuccess();
-      }, 1000);
+      }, 250);
     } catch {
       setErrorMsg('Failed to save climb. Please try again.');
     } finally {
