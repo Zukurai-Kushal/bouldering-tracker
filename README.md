@@ -1,6 +1,8 @@
 # Bouldering Tracker Web Application
 
-This project is a multi-user web application designed for bouldering enthusiasts to log and track their climbs. Users can record detailed information about each climb, including grade, features, location, and personal notes. The app supports grade conversion between V scale and Font scale, mobile responsiveness, and optional sharing of climbs. It also includes analytics for skill progression based on climb features.
+This project is a multi-user web application designed for bouldering enthusiasts to log and track their climbs. Users can record detailed information about each climb, including grade, features, location, and personal notes. The app supports grade conversion between V scale and Font scale, mobile responsiveness, and optional sharing of climbs. 
+
+*Future plan: Analytics for skill progression based on climb features and performance.
 
 ## Features
 - **User Authentication**: Secure login and registration.
@@ -10,20 +12,19 @@ This project is a multi-user web application designed for bouldering enthusiasts
   - Comments (optional)
   - Boulder name (optional)
   - Photo upload (optional)
-  - Date and time of climb
+  - Date and time of climb (Automatically set)
   - Location (linked to Location table)
   - Rating (1–3 stars)
   - Number of attempts (optional)
-  - Option to mark climb as shareable
-- **Grade Conversion**: Convert between V scale and Font scale.
+  - Option to mark climb as shareable (public or private)
+- ~~**Grade Conversion**: Convert between V scale and Font scale.~~
 - **Feature Autocomplete**: Suggest previously used features to avoid spelling inconsistencies.
 - **Location Management**:
-  - Predefined locations (e.g., gyms)
   - User-generated locations (editable by creator)
   - Optional GPS coordinates for outdoor climbs
-- **Skill Graph Analytics**:
-  - Radar chart showing proficiency across features
-  - Weighted by grade and number of attempts
+- ~~**Skill Graph Analytics**:~~
+  - ~~Radar chart showing proficiency across features~~
+  - ~~Weighted by grade and number of attempts~~
 - **Responsive Design**: Optimized for mobile and desktop.
 
 ## Database Entities
@@ -58,7 +59,7 @@ This project is a multi-user web application designed for bouldering enthusiasts
 ### Location
 - location_id (PK)
 - name (string)
-- type (enum: predefined, user-generated)
+- type (enum: INDOORS, OUTDOORS)
 - creator_id (FK → User, nullable)
 - country (optional)
 - region (optional)
