@@ -58,15 +58,13 @@ Backend: A Spring Boot API for authentication, climb management, and location-ba
 ## Setup Instructions
 ### Backend
 ```
-# Clone and run backend
 cd backend
 ./mvnw spring-boot:run
 ```
 Configure application.properties for database
 
-###Frontend
+### Frontend
 ```
-Shell# Clone and run frontend
 cd frontend
 npm install
 npm run dev
@@ -80,5 +78,5 @@ http://localhost:9001/swagger-ui.html
 https://kushal-zuk-9525202.postman.co/workspace/My-Workspace~e3933dfd-ea62-4e38-9df5-57cd0ffaa852/collection/49807865-9e0ffec3-c703-4b9f-b07d-03d325cfaae6?action=share&creator=49807865
 
 ## Media
-- Wireframe: frontend/media/wireframe.pdf
-- ERD Diagram: backend/media/Bouldering_App_ERD.png
+- Wireframe: frontend/bouldering-tracker-frontend/media/wireframe.pdf
+- ERD Diagram: backend/bouldering-tracker-backend/media/Bouldering_App_ERD.png
